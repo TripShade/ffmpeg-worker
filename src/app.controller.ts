@@ -29,6 +29,7 @@ export class AppController {
     @Query('loop') loop: boolean,
     @Res() res,
   ): Promise<void> {
+    // unpack zip
     const unpackRes = await cmd.run(
       `unzip -q /app/files/${name} -d /app/files/${name}-files`,
     );
