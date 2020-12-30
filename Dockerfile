@@ -1,9 +1,6 @@
 # Base image
+FROM jrottenberg/ffmpeg:4.1-alpine as ffmpeg
 FROM node:alpine as build-stage
-
-# Arguments
-ARG NPM_TOKEN
-ARG HTTP_PROXY
 
 # Image owner
 LABEL maintainer "Tripshade"
@@ -11,15 +8,14 @@ LABEL maintainer "Tripshade"
 # Make the 'app' folder the current working directory
 WORKDIR /app
 
-RUN apk add ffmpeg unzip
+COPY --from=ffmpeg / /
+
+RUN apk add unzip
 
 # Copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
-RUN npm install
-RUN npm run build
-
-# Build app for production with minification
-# RUN npm run start:prod
+RUN yarn
+RUN yarn build
 
 EXPOSE 8080
 
